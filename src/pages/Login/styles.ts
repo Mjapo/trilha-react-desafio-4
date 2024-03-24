@@ -49,3 +49,9 @@ export const Spacing = styled.div`
     margin: 10px 0;
 `
 
+
+export const ErrorText = styled.div`
+  color: red;
+  font-size: 14px;
+  /* Outros estilos */
+`;

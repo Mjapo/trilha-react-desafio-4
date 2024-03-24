@@ -1,10 +1,11 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { Container, LoginContainer, Column, Spacing, Title } from "./styles";
+import { Container, LoginContainer, Column, Spacing, Title, ErrorText } from "./styles";
 import { defaultValues, IFormLogin } from "./types";
 
 const schema = yup
@@ -12,21 +13,22 @@ const schema = yup
     email: yup.string().email("E-mail inválido").required("Campo obrigatório"),
     password: yup
       .string()
-      .min(6, "No minimo 6 caracteres")
+      .min(6, "No mínimo 6 caracteres")
       .required("Campo obrigatório"),
   })
   .required();
 
 const Login = () => {
-  const {
-    control,
-    formState: { errors, isValid },
-  } = useForm<IFormLogin>({
+  const { control, handleSubmit, formState: { errors } } = useForm<IFormLogin>({
     resolver: yupResolver(schema),
     mode: "onBlur",
     defaultValues,
     reValidateMode: "onChange",
   });
+
+  const onSubmit = (data: IFormLogin) => {
+    console.log(data);
+  };
 
   return (
     <Container>
@@ -49,7 +51,14 @@ const Login = () => {
             errorMessage={errors?.password?.message}
           />
           <Spacing />
-          <Button title="Entrar" />
+          {errors && (
+            <ErrorText>
+              {errors.email && <span>{errors.email.message}</span>}
+              {errors.password && <span>{errors.password.message}</span>}
+            </ErrorText>
+          )}
+          <Spacing />
+          <Button title="Entrar" onClick={handleSubmit(onSubmit)}></Button>
         </Column>
       </LoginContainer>
     </Container>
